@@ -1,0 +1,101 @@
+version: "3"
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: 'America/New_York'
+      WEBPASSWORD: 'set a secure password here or it will be this string'
+      DNS1: 208.67.222.222
+      DNS2: 208.67.220.220
+    volumes:
+      # Volumes store your data between container upgrades
+      - ./etc/pihole/:/etc/pihole/
+      - ./etc/dnsmasq.d/:/etc/dnsmasq.d/
+      # run `touch ./var-log/pihole.log` first unless you like errors
+      - ./var-log/pihole.log:/var/log/pihole.log
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 172.22.0.2
+  influxdb:
+    container_name: influxdb
+    image: "arm32v7/influxdb:latest"
+    command: bash -c "/init-influxdb.sh; influxd 2>&1 | tee -a /var/log/influxdb/influxdb.log"
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_HTTP_AUTH_ENABLED: 'true'
+      INFLUXDB_ADMIN_USER: 'admin'
+      INFLUXDB_ADMIN_PASSWORD: 'setasecurepasswordhereoritwillbethisstring'
+      INFLUXDB_DB: 'telegraf'
+      INFLUXDB_WRITE_USER: 'telegraf'
+      INFLUXDB_WRITE_USER_PASSWORD: 'setasecurepasswordhereoritwillbethisstring'
+      INFLUXDB_READ_USER: 'grafana'
+      INFLUXDB_READ_USER_PASSWORD: 'setasecurepasswordhereoritwillbethisstring'
+    volumes:
+      - ./etc/ssl/mycerts:/etc/ssl/mycerts
+      - ./var-lib/influxdb:/var/lib/influxdb
+      - ./var-log/influxdb:/var/log/influxdb
+      - ./etc/influxdb:/etc/influxdb:ro
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 172.22.0.3
+  telegraf:
+    container_name: telegraf
+    image: "arm32v7/telegraf:latest"
+    command: bash -c "ldconfig && telegraf"
+    depends_on:
+      - influxdb
+    devices:
+      - /dev/vchiq:/dev/vchiq
+    ports:
+      - 998:998
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var:/host/var:ro
+      - /run:/host/run:ro
+      - ./etc/telegraf:/etc/telegraf:ro
+      - ./var-log/telegraf:/var/log/telegraf
+      - /dev/vchiq:/dev/vchiq
+      - /etc/ld.so.conf.d/00-vmcs.conf:/etc/ld.so.conf.d/00-vmcs.conf
+      - /opt/vc:/opt/vc
+    environment:
+      INFLUXDB_WRITE_USER_PASSWORD: 'setasecurepasswordhereoritwillbethisstring'
+      HOST_PROC: /host/proc
+      HOST_SYS: /host/sys
+      HOST_VAR: /host/var
+      HOST_RUN: /host/run
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 172.22.0.4
+  grafana:
+    container_name: grafana
+    image: "grafana/grafana:latest"
+    depends_on:
+      - influxdb
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./etc/ssl/mycerts:/etc/ssl/mycerts
+      - ./var-lib/grafana:/var/lib/grafana
+      - ./var-log/grafana:/var/log/grafana
+      - ./etc/grafana/grafana.ini:/etc/grafana/grafana.ini
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 172.22.0.5
+

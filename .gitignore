@@ -1,0 +1,5 @@
+etc/ssl
+etc/dnsmasq.d
+etc/pihole
+var-log
+var-lib
