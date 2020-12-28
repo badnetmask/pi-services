@@ -41,6 +41,9 @@ which services are running, their dependencies, and **some** of their
 configuration parameters (not all of them). Some of the configuration files are
 also shipped in this directory, using some (probably) sane defaults.
 
+# Updating everything
+The `update-all.sh` script will check for the latest versions of all images, and restart the compose if necessary.
+
 # Step 1 - Preparation
 # Step 1.1 - Prepare the system to run containers
 This will allow you to run your containers as the non-root users (in this case
@@ -196,7 +199,7 @@ graphs! Enjoy!
 I have intentions to improve this guide (eventually). Some of the things in my mind:
 * Add support for [Let's Encrypt](https://letsencrypt.org/) certificates.
 * Add instructions on how to migrate from self-signed to Let's Encrypt.
-* Add maintenance instructions (updates, backups, etc).
+* Add maintenance instructions (~~updates~~, backups, etc).
 * **Maybe**:
   * Either Nagios or Zabbix, still deciding what to do.
   * Some sort of internet bandwith test.
