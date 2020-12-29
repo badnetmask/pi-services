@@ -98,4 +98,23 @@ services:
     networks:
       default:
         ipv4_address: 172.22.0.5
-
+#  motion:
+#    container_name: motion
+#    build: ./motion-docker
+#    depends_on:
+#      - pihole
+#    devices:
+#      - /dev/video0:/dev/video0
+#    ports:
+#      - "8080:8080"
+#      - "8081:8081"
+#    volumes:
+#      - ./var-log/motion:/var/log/motion
+#      - ./var-lib/motion:/var/lib/motion
+#      - ./etc/motion/motion.conf:/usr/local/etc/motion/motion.conf
+#    environment:
+#      TZ: 'America/New_York'
+#    restart: unless-stopped
+#    networkds:
+#      default:
+#        ipv4_address: 172.23.0.6

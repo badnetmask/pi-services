@@ -148,6 +148,20 @@ There is absolutely nothing you need to change here. **Just remember**, the
 default username and password are *admin:admin*, and I suggest you change this
 after your first login.
 
+## Step 3.5 - Motion
+**NOTE:** This is disabled by default. To enable, uncomment the entire section.
+
+This section is based on the official
+[motion-docker](https://github.com/Motion-Project/motion-docker) project
+(modified for the Pi). It assumes you have a webcam connected, that it has been
+properly detected by the Raspberry Pi, and it's being exposed on /dev/video0.
+It stands up a web server on port 8080 that you can use to control your webcam
+capture. The webcam itself is visible on port 8081.
+
+*Only enable after you are sure the [configuration suits your
+needs](https://motion-project.github.io/motion_config.html), otherwise you may
+eat up your disk.*
+
 # Step 4 - Run the services
 The command below will start all services, in the appropriate order, then
 detach so you can get your terminal back.
