@@ -92,9 +92,10 @@ Organizational Unit Name (eg, section) []:
 Common Name (e.g. server FQDN or YOUR name) []:
 Email Address []:
 ***
-don't forget this last command!
+don't forget these last commands!
 ***
-$ chmod 644 etc/ssl/mycerts/server.key
+$ cat etc/ssl/mycerts/server.key etc/ssl/mycerts/server.pem > etc/ssl/mycerts/combined.pem
+$ chmod 644 etc/ssl/mycerts/server.key etc/ssl/mycerts/combined.pem
 ```
 
 **NOTE:** It's strongly suggested that you do not use this certificate file for
