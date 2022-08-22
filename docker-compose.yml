@@ -22,8 +22,8 @@ services:
       # Volumes store your data between container upgrades
       - ./etc/pihole/:/etc/pihole/
       - ./etc/dnsmasq.d/:/etc/dnsmasq.d/
-      # run `touch ./var-log/pihole.log` first unless you like errors
-      - ./var-log/pihole.log:/var/log/pihole.log
+      # run `mkdir ./var-log/pihole` first unless you like errors
+      - ./var-log/pihole/:/var/log/pihole/
       - ./ssl-certs:/etc/ssl/mycerts
       - ./etc/lighttpd/external.conf:/etc/lighttpd/external.conf
     restart: unless-stopped

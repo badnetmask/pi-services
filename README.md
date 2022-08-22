@@ -64,8 +64,7 @@ Some files and folders are required, but they won't be automatically created,
 so you need to do that manually:
 
 ```
-$ mkdir -p etc/ssl/mycerts var-log var-lib/grafana var-log/grafana
-$ touch var-log/pihole.log
+$ mkdir -p etc/ssl/mycerts var-log var-lib/grafana var-log/grafana var-log/pihole
 $ sudo chown 472 var-lib/grafana var-log/grafana
 ```
 
