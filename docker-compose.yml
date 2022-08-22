@@ -30,6 +30,8 @@ services:
     networks:
       default:
         ipv4_address: 172.22.0.2
+    security_opt:
+      - seccomp=unconfined
   influxdb:
     container_name: influxdb
     image: "arm32v7/influxdb:latest"
