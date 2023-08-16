@@ -30,6 +30,8 @@ services:
     networks:
       default:
         ipv4_address: 172.22.0.2
+    dns:
+      - 127.0.0.1
     security_opt:
       - seccomp=unconfined
   influxdb:
