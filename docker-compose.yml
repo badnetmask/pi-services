@@ -16,8 +16,8 @@ services:
     environment:
       TZ: 'America/New_York'
       WEBPASSWORD: 'set a secure password here or it will be this string'
-      PI_HOLE_DNS_: 208.67.222.222;208.67.220.220
-      DNSMASQ_USER: root
+      DNS1: 208.67.222.222
+      DNS2: 208.67.220.220
     volumes:
       # Volumes store your data between container upgrades
       - ./etc/pihole/:/etc/pihole/
@@ -25,7 +25,7 @@ services:
       # run `mkdir ./var-log/pihole` first unless you like errors
       - ./var-log/pihole/:/var/log/pihole/
       - ./ssl-certs:/etc/ssl/mycerts
-      - ./etc/lighttpd/external.conf:/etc/lighttpd/conf-enabled/external.conf
+      - ./etc/lighttpd/external.conf:/etc/lighttpd/external.conf
     restart: unless-stopped
     networks:
       default:
@@ -58,10 +58,12 @@ services:
         ipv4_address: 172.22.0.3
   telegraf:
     container_name: telegraf
-    image: "telegraf:latest"
-    command: bash -c "telegraf"
+    image: "arm32v7/telegraf:latest"
+    command: bash -c "ldconfig && telegraf"
     depends_on:
       - influxdb
+    devices:
+      - /dev/vchiq:/dev/vchiq
     ports:
       - 998:998
     volumes:
@@ -71,9 +73,9 @@ services:
       - /run:/host/run:ro
       - ./etc/telegraf:/etc/telegraf:ro
       - ./var-log/telegraf:/var/log/telegraf
-      - /usr/bin/vcgencmd:/usr/bin/vcgencmd:ro
-      - /lib/aarch64-linux-gnu/libvcos.so.0:/lib/aarch64-linux-gnu/libvcos.so.0:ro
-      - /lib/aarch64-linux-gnu/libvchiq_arm.so.0:/lib/aarch64-linux-gnu/libvchiq_arm.so.0:ro
+      - /dev/vchiq:/dev/vchiq
+      - /etc/ld.so.conf.d/00-vmcs.conf:/etc/ld.so.conf.d/00-vmcs.conf
+      - /opt/vc:/opt/vc
     environment:
       INFLUXDB_WRITE_USER_PASSWORD: 'setasecurepasswordhereoritwillbethisstring'
       HOST_PROC: /host/proc
