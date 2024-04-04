@@ -42,7 +42,17 @@ configuration parameters (not all of them). Some of the configuration files are
 also shipped in this directory, using some (probably) sane defaults.
 
 # Updating everything
-The `update-all.sh` script will check for the latest versions of all images, and restart the compose if necessary.
+Initially I release this repo with a script called `update-all.sh`, but in all
+fairness now I understand this script is overkill.
+
+The simplest way to update everything is this:
+```
+$ docker-compose pull
+$ docker-compose up -d
+```
+
+Even better, if you only one to update one of the services simply run
+`docker-compose pull <name> && docker-compose up -d`.
 
 # Step 1 - Preparation
 # Step 1.1 - Prepare the system to run containers
@@ -212,10 +222,11 @@ graphs! Enjoy!
 # TODO
 I have intentions to improve this guide (eventually). Some of the things in my mind:
 * Add support for [Let's Encrypt](https://letsencrypt.org/) certificates.
-* Add instructions on how to migrate from self-signed to Let's Encrypt.
+  * NOTE: I have a way to do this with [Step-CA](https://mteixeira.wordpress.com/2024/03/03/running-your-private-certificate-authority-with-acme-support/) and Caddy. Stay tuned.
+* Add instructions on how to migrate from self-signed to ~~Let's Encrypt~~ Step-CA.
 * Add maintenance instructions (~~updates~~, backups, etc).
 * **Maybe**:
-  * Either Nagios or Zabbix, still deciding what to do.
+  * ~~Either Nagios or Zabbix, still deciding what to do.~~ (It will be [Uptime Kuma](https://github.com/louislam/uptime-kuma)
   * Some sort of internet bandwith test.
 
 # License

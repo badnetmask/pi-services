@@ -2,6 +2,12 @@
 # This script will check if there are updates for all images,
 # and restart the compose if needed.
 
+echo "**"
+echo "In all fairness, this script is overkill..."
+echo "$ docker-compose pull && docker-compose up -d"
+echo "The above commands do the same thing, with much less effort..."
+echo "**
+
 rc=0
 do_update=0
 
